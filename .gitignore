@@ -1,3 +1,19 @@
+# Cmake files
+build/
+build/*
+*/build/
+*/build/*
+
+# The library release dir
+lib
+lib/*
+*/lib/
+*/lib/*
+
+# The binary dirs
+bin/
+*/bin/
+
 # Object files
 *.o
 *.ko
@@ -30,4 +46,14 @@
 
 # Debug files
 *.dSYM/
-*.su
+
+# Doc files
+doc/html
+doc/doxygen.stamp
+
+# Fortran modules
+/modules
+
+# Release script
+release.sh
+tag.sh
