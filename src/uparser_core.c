@@ -85,13 +85,17 @@ void uparser_parse() {
                                         (void*)&key[j], 
                                         __uparser_char_cmp)) == &urb_sentinel, 
                                         "key '%c' is not recognized", key[j]);
-                        saved_value = &((uparser_arg_t*)n->value)->value;
-                        if (strlen("true") > strlen(*saved_value)) {
-                            free(*saved_value);
-                            *saved_value = 
-                                (char*)malloc(sizeof(char)*strlen("true"));
+                        if (key[j] == 'h') {
+                            uparser_usage();
+                        } else {
+                            saved_value = &((uparser_arg_t*)n->value)->value;
+                            if (strlen("true") > strlen(*saved_value)) {
+                                free(*saved_value);
+                                *saved_value = 
+                                    (char*)malloc(sizeof(char)*strlen("true"));
+                            }
+                            sprintf(*saved_value, "%s", "true");
                         }
-                        sprintf(*saved_value, "%s", "true");
                     }
                 } else {
                     /// this should be a short_key=value statement.
@@ -119,13 +123,17 @@ void uparser_parse() {
                 if((value = strtok(NULL, "=")) == NULL) {
                     /// this should be a long boolean argument,
                     /// the value equal to true internally (false otherwise).
-                    saved_value = &((uparser_arg_t*)n->value)->value;
-                    if (strlen("true") > strlen(*saved_value)) {
-                        free(*saved_value);
-                        *saved_value = 
-                            (char*)malloc(sizeof(char)*strlen("true"));
+                    if (strcmp(value, "help")==0) {
+                            uparser_usage();
+                    } else {
+                        saved_value = &((uparser_arg_t*)n->value)->value;
+                        if (strlen("true") > strlen(*saved_value)) {
+                            free(*saved_value);
+                            *saved_value = 
+                                (char*)malloc(sizeof(char)*strlen("true"));
+                        }
+                        sprintf(*saved_value, "%s", "true");
                     }
-                    sprintf(*saved_value, "%s", "true");
                 } else {
                     /// this should be a long_key=value statement.
                     UPARSER_EXIT_IF(!__uparser_value_isvalid(value), 

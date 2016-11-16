@@ -77,3 +77,10 @@ include_directories("${source_dir}/googletest/include"
 
 ## Build the uparser C/C++ unit tests.
 add_subdirectory(src)
+
+## Build the uparser Fortran unit tests.
+add_subdirectory(fortran_interface)
+
+## Add a custom target that includes the build of all the tests.
+add_custom_target(build_tests)
+add_dependencies(build_tests uparser_test uparser_test_fortran)

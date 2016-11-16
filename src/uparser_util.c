@@ -31,11 +31,18 @@
 /// @brief
 ///
 #include <uparser/util.h>
+#include <uparser/types.h>
 #include <__uparser/util-inl.h>
 #include <urb_tree/urb_tree.h>
 
-extern urb_t *up;
+extern uparser_t *up;
 
 bool uparser_has(const char *key) {
-    return urb_tree_find(&up, (void*)key, __uparser_str_cmp) != &urb_sentinel;
+    UPARSER_EXIT_IF((key == NULL) || (strlen(key) == 0), "key cannot be empty");
+    if (strlen(key)==1)
+        return (urb_tree_find(&up->short_lookup, (void*)&key[0],
+                              __uparser_char_cmp) != &urb_sentinel);
+    else
+        return (urb_tree_find(&up->long_lookup, (void*)key,
+                              __uparser_str_cmp) != &urb_sentinel);
 }

@@ -62,7 +62,7 @@ void uparser_get_bool_single(const char *key, bool *value) {
 void uparser_get_char_single(const char *key, char *value) {
     int i; urb_t *n; const char *vptr;
     UPARSER_EXIT_IF((key == NULL) || (strlen(key) == 0),
-                    "key can not be both empty");
+                    "key can not be empty");
     if (strlen(key)==1) {
         UPARSER_EXIT_IF((n=urb_tree_find(&up->short_lookup, (void*)&key[0],
                         __uparser_char_cmp)) == &urb_sentinel,
@@ -83,7 +83,7 @@ void uparser_get_char_single(const char *key, char *value) {
 void uparser_get_string_single(const char *key, char *value) {
     urb_t *n; const char *vptr;
     UPARSER_EXIT_IF((key == NULL) || (strlen(key) == 0),
-                    "key can not be both empty");
+                    "key can not be empty");
     if (strlen(key)==1) {
         UPARSER_EXIT_IF((n=urb_tree_find(&up->short_lookup, (void*)&key[0],
                         __uparser_char_cmp)) == &urb_sentinel,
@@ -100,7 +100,7 @@ void uparser_get_string_single(const char *key, char *value) {
 void uparser_get_int32_single(const char *key, int *value) {
     int i; urb_t *n; const char *vptr;
     UPARSER_EXIT_IF((key == NULL) || (strlen(key) == 0),
-                    "key can not be both empty");
+                    "key can not be empty");
     if (strlen(key)==1) {
         UPARSER_EXIT_IF((n=urb_tree_find(&up->short_lookup, (void*)&key[0],
                         __uparser_char_cmp)) == &urb_sentinel,
@@ -121,7 +121,7 @@ void uparser_get_int32_single(const char *key, int *value) {
 void uparser_get_int64_single(const char *key, int64_t *value) {
     int i; urb_t *n; const char *vptr;
     UPARSER_EXIT_IF((key == NULL) || (strlen(key) == 0),
-                    "key can not be both empty");
+                    "key can not be empty");
     if (strlen(key)==1) {
         UPARSER_EXIT_IF((n=urb_tree_find(&up->short_lookup, (void*)&key[0],
                         __uparser_char_cmp)) == &urb_sentinel,
@@ -142,7 +142,7 @@ void uparser_get_int64_single(const char *key, int64_t *value) {
 void uparser_get_float_single(const char *key, float *value) {
     int i; urb_t *n; const char *vptr;
     UPARSER_EXIT_IF((key == NULL) || (strlen(key) == 0),
-                    "key can not be both empty");
+                    "key can not be empty");
     if (strlen(key)==1) {
         UPARSER_EXIT_IF((n=urb_tree_find(&up->short_lookup, (void*)&key[0],
                         __uparser_char_cmp)) == &urb_sentinel,
@@ -163,7 +163,7 @@ void uparser_get_float_single(const char *key, float *value) {
 void uparser_get_double_single(const char *key, double *value) {
     int i; urb_t *n; const char *vptr;
     UPARSER_EXIT_IF((key == NULL) || (strlen(key) == 0),
-                    "key can not be both empty");
+                    "key can not be empty");
     if (strlen(key)==1) {
         UPARSER_EXIT_IF((n=urb_tree_find(&up->short_lookup, (void*)&key[0],
                         __uparser_char_cmp)) == &urb_sentinel,

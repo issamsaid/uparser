@@ -146,78 +146,48 @@ endif (DEFINED ENV{URB_TREE_DIR})
 add_subdirectory(src)
 
 ## Build the uparser Fortran interface.
-#add_subdirectory(fortran_interface EXCLUDE_FROM_ALL)
+add_subdirectory(fortran_interface EXCLUDE_FROM_ALL)
 
 ## Build the uparser unit testing suit (develop branch only).
 add_subdirectory(test EXCLUDE_FROM_ALL)
 
-## Build the uparser examples.
-#add_subdirectory(examples EXCLUDE_FROM_ALL)
-
 ## Build the uparser documentation.
-#add_subdirectory(doc EXCLUDE_FROM_ALL)
+add_subdirectory(doc EXCLUDE_FROM_ALL)
 
-# ##
-# ## Workarounds for the lack of post_install steps:
-# ##
-# ## Add the path to ulist which we need during post-install.
-# get_target_property(ULIST_LIB libulist IMPORTED_LOCATION)
-# install(CODE "set(ULIST_LIB \"${ULIST_LIB}\")")
+##
+## Workarounds for the lack of post_install steps:
+##
+## Add the path to urb_tree which we need during post install.
+get_target_property(URB_TREE_LIB liburb_tree IMPORTED_LOCATION)
+install(CODE "set(URB_TREE_LIB \"${URB_TREE_LIB}\")")
 
-# ## Add the path to urb_tree which we need during post install.
-# get_target_property(URB_TREE_LIB liburb_tree IMPORTED_LOCATION)
-# install(CODE "set(URB_TREE_LIB \"${URB_TREE_LIB}\")")
+## Add the paths of the uparser_fortran target which we need during post-install.
+get_directory_property(UPARSER_FORTRAN_BUILD_LIB DIRECTORY 
+                       fortran_interface DEFINITION UPARSER_FORTRAN_BUILD_LIB)
+get_directory_property(UPARSER_FORTRAN_INSTALL_DIR DIRECTORY 
+                       fortran_interface DEFINITION UPARSER_FORTRAN_INSTALL_DIR)
+install(CODE "set(UPARSER_FORTRAN_BUILD_LIB \"${UPARSER_FORTRAN_BUILD_LIB}\")")
+install(CODE "set(UPARSER_FORTRAN_INSTALL_DIR \"${UPARSER_FORTRAN_INSTALL_DIR}\")")
 
-# ## Add the paths of the uparser_fortran target which we need during post-install.
-# get_directory_property(UPARSER_FORTRAN_BUILD_LIB DIRECTORY 
-#                        fortran_interface DEFINITION UPARSER_FORTRAN_BUILD_LIB)
-# get_directory_property(UPARSER_FORTRAN_INSTALL_DIR DIRECTORY 
-#                        fortran_interface DEFINITION UPARSER_FORTRAN_INSTALL_DIR)
-# install(CODE "set(UPARSER_FORTRAN_BUILD_LIB \"${UPARSER_FORTRAN_BUILD_LIB}\")")
-# install(CODE "set(UPARSER_FORTRAN_INSTALL_DIR \"${UPARSER_FORTRAN_INSTALL_DIR}\")")
+## Add the paths of the uparser_test target which we need during post-install.
+get_directory_property(UPARSER_TEST_BUILD_EXE DIRECTORY 
+                       test/src DEFINITION UPARSER_TEST_BUILD_EXE)
+get_directory_property(UPARSER_TEST_INSTALL_DIR DIRECTORY 
+                       test/src DEFINITION UPARSER_TEST_INSTALL_DIR)
+install(CODE "set(UPARSER_TEST_BUILD_EXE \"${UPARSER_TEST_BUILD_EXE}\")")
+install(CODE "set(UPARSER_TEST_INSTALL_DIR \"${UPARSER_TEST_INSTALL_DIR}\")")
 
-# ## Add the paths of the uparser_test target which we need during post-install.
-# get_directory_property(UPARSER_TEST_BUILD_EXE DIRECTORY 
-#                        test/src DEFINITION UPARSER_TEST_BUILD_EXE)
-# get_directory_property(UPARSER_TEST_INSTALL_DIR DIRECTORY 
-#                        test/src DEFINITION UPARSER_TEST_INSTALL_DIR)
-# install(CODE "set(UPARSER_TEST_BUILD_EXE \"${UPARSER_TEST_BUILD_EXE}\")")
-# install(CODE "set(UPARSER_TEST_INSTALL_DIR \"${UPARSER_TEST_INSTALL_DIR}\")")
+## Add the paths of uparser_test_fortran which we need during post-install.
+get_directory_property(UPARSER_TEST_FORTRAN_BUILD_EXE DIRECTORY 
+                       test/fortran_interface 
+                       DEFINITION UPARSER_TEST_FORTRAN_BUILD_EXE)
+get_directory_property(UPARSER_TEST_FORTRAN_INSTALL_DIR DIRECTORY 
+                       test/fortran_interface 
+                       DEFINITION UPARSER_TEST_FORTRAN_INSTALL_DIR)
+install(CODE 
+        "set(UPARSER_TEST_FORTRAN_BUILD_EXE \"${UPARSER_TEST_FORTRAN_BUILD_EXE}\")")
+install(CODE 
+        "set(UPARSER_TEST_FORTRAN_INSTALL_DIR \"${UPARSER_TEST_FORTRAN_INSTALL_DIR}\")")
 
-# ## Add the paths of uparser_test_fortran which we need during post-install.
-# get_directory_property(UPARSER_TEST_FORTRAN_BUILD_EXE DIRECTORY 
-#                        test/fortran_interface 
-#                        DEFINITION UPARSER_TEST_FORTRAN_BUILD_EXE)
-# get_directory_property(UPARSER_TEST_FORTRAN_INSTALL_DIR DIRECTORY 
-#                        test/fortran_interface 
-#                        DEFINITION UPARSER_TEST_FORTRAN_INSTALL_DIR)
-# install(CODE 
-#         "set(UPARSER_TEST_FORTRAN_BUILD_EXE \"${UPARSER_TEST_FORTRAN_BUILD_EXE}\")")
-# install(CODE 
-#         "set(UPARSER_TEST_FORTRAN_INSTALL_DIR \"${UPARSER_TEST_FORTRAN_INSTALL_DIR}\")")
-
-# ## Add the paths of the c_examples target which we need during post-install.
-# get_directory_property(UPARSER_C_EXAMPLES_FILES DIRECTORY 
-#                        examples/src DEFINITION UPARSER_C_EXAMPLES_FILES)
-# get_directory_property(UPARSER_C_EXAMPLES_INSTALL_DIR DIRECTORY 
-#                        examples/src DEFINITION UPARSER_C_EXAMPLES_INSTALL_DIR)
-# install(CODE 
-#         "set(UPARSER_C_EXAMPLES_FILES \"${UPARSER_C_EXAMPLES_FILES}\")")
-# install(CODE 
-#         "set(UPARSER_C_EXAMPLES_INSTALL_DIR \"${UPARSER_C_EXAMPLES_INSTALL_DIR}\")")
-
-# ## Add the paths of the fortran_examples target which 
-# ## we need during post-install.
-# get_directory_property(UPARSER_FORTRAN_EXAMPLES_FILES DIRECTORY 
-#                        examples/fortran_interface 
-#                        DEFINITION UPARSER_FORTRAN_EXAMPLES_FILES)
-# get_directory_property(UPARSER_FORTRAN_EXAMPLES_INSTALL_DIR DIRECTORY 
-#                        examples/fortran_interface 
-#                        DEFINITION UPARSER_FORTRAN_EXAMPLES_INSTALL_DIR)
-# install(CODE 
-#         "set(UPARSER_FORTRAN_EXAMPLES_FILES \"${UPARSER_FORTRAN_EXAMPLES_FILES}\")")
-# install(CODE 
-#         "set(UPARSER_FORTRAN_EXAMPLES_INSTALL_DIR \"${UPARSER_FORTRAN_EXAMPLES_INSTALL_DIR}\")")
-
-# ## Add a subdirectory that contains the post-install scripts.
-# add_subdirectory(${CMAKE_SOURCE_DIR}/cmake/post_install)
+## Add a subdirectory that contains the post-install scripts.
+add_subdirectory(${CMAKE_SOURCE_DIR}/cmake/post_install)
