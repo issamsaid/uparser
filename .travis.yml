@@ -11,7 +11,7 @@ script:
   - mkdir build
   - cd build
   - cmake -G"Unix Makefiles" ../
-  - make build_tests install
+  - make all build_tests install
   - cd ..
   - ./test/bin/uparser_test
   - ./test/bin/uparser_test_fortran
