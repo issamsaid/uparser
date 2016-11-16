@@ -26,8 +26,8 @@
 <a name="getting-started"></a>
 # Getting started
 The following section is a step by step guide that will take you from fetching
-the source code from the repository branches to running your <b>uparser</b> first 
-examples on your machine.
+the source code from the repository branches to running your <b>uparser</b> 
+first examples on your machine.
 
 <a name="branches-and-cloning"></a>
 ## Branches and cloning
