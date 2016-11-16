@@ -39,3 +39,13 @@ file(GLOB C_SRCS "single/*.c" "*.c")
 add_library(uparser STATIC ${C_SRCS})
 set_target_properties(uparser PROPERTIES OUTPUT_NAME "uparser")
 install(TARGETS uparser ARCHIVE DESTINATION lib)
+
+## Add the pathes to uparser which we need during post install.
+get_target_property(UPARSER_BUILD_LIB uparser LOCATION)
+get_filename_component(UPARSER_BUILD_DIR ${UPARSER_BUILD_LIB} DIRECTORY)
+string(REPLACE ${UPARSER_BUILD_DIR} 
+       ${CMAKE_SOURCE_DIR}/lib UPARSER_INSTALL_LIB ${UPARSER_BUILD_LIB})
+
+install(CODE "set(UPARSER_BUILD_LIB \"${UPARSER_BUILD_LIB}\")")
+install(CODE "set(UPARSER_INSTALL_LIB \"${UPARSER_INSTALL_LIB}\")")
+
