@@ -54,3 +54,15 @@ install(TARGETS uparser_test
 
 ## Add the test to the make test target
 add_test(NAME uparser_test COMMAND ${EXECUTABLE_OUTPUT_PATH}/uparser_test)
+
+##
+## Workaround to install this target simultaneously with the main target.
+## This is due to a cmake restriction: 
+##  - Installing a target with the EXCLUDE_FROM_ALL target property 
+##    set to TRUE has undefined behavior. 
+##  
+## First: inform the build location of the target. 
+get_target_property(UPARSER_TEST_BUILD_EXE uparser_test LOCATION)
+
+## Then : inform the location where the target is to be installed. 
+set (UPARSER_TEST_INSTALL_DIR ${CMAKE_SOURCE_DIR}/test/bin)
