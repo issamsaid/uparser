@@ -123,8 +123,8 @@ void uparser_parse() {
                 if((value = strtok(NULL, "=")) == NULL) {
                     /// this should be a long boolean argument,
                     /// the value equal to true internally (false otherwise).
-                    if (strcmp(value, "help")==0) {
-                            uparser_usage();
+                    if (strcmp(&key[2], "help") == 0) {
+                        uparser_usage();
                     } else {
                         saved_value = &((uparser_arg_t*)n->value)->value;
                         if (strlen("true") > strlen(*saved_value)) {

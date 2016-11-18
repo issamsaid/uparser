@@ -55,6 +55,9 @@ module m_uparser_core
     end interface
 
     interface
+        subroutine uparser_parse() bind(c, name = "uparser_parse")
+        end subroutine uparser_parse
+
         subroutine uparser_release() bind(c, name = "uparser_release")
         end subroutine uparser_release
 
@@ -64,6 +67,7 @@ module m_uparser_core
 
     public :: uparser_init
     public :: uparser_load
+    public :: uparser_parse
     public :: uparser_release
     public :: uparser_usage
 

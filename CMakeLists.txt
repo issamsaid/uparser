@@ -44,10 +44,10 @@ set (CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}")
 set (CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 
 ## Configurable options for how we want to build uparser
-option(uparser_debug       "Build uparser with the debug mode."                  OFF)
-option(uparser_verbose     "Build uparser with the verbose mode activated."       ON)
-option(uparser_use_tty     "Build uparser with logging into  the terminal."       ON)
-option(uparser_roundup_wrk "Build uparser with rounding up the workgroup sizes."  ON)
+option(uparser_debug       
+    "Build uparser with the debug mode."                  OFF)
+option(uparser_verbose     
+    "Build uparser with the verbose mode activated."       ON)
 
 ## Set the build type (DEFAULT is Release)
 if (NOT CMAKE_BUILD_TYPE)
@@ -99,14 +99,6 @@ if (uparser_verbose)
 	set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   -D__UPARSER_VERBOSE")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D__UPARSER_VERBOSE")
 endif (uparser_verbose)
-if (uparser_use_tty)
-	set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   -D__UPARSER_LOG_STD")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D__UPARSER_LOG_STD")
-endif (uparser_use_tty)
-if (uparser_roundup_wrk)
-    set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   -D__UPARSER_ROUNDUP_WRK")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D__UPARSER_ROUNDUP_WRK")
-endif (uparser_roundup_wrk)
 
 ##
 ## Use the urb_tree library if the user sets its path 
@@ -151,6 +143,9 @@ add_subdirectory(fortran_interface EXCLUDE_FROM_ALL)
 ## Build the uparser unit testing suit (develop branch only).
 add_subdirectory(test EXCLUDE_FROM_ALL)
 
+## Build the uparser examples.
+add_subdirectory(examples EXCLUDE_FROM_ALL)
+
 ## Build the uparser documentation.
 add_subdirectory(doc EXCLUDE_FROM_ALL)
 
@@ -188,6 +183,29 @@ install(CODE
         "set(UPARSER_TEST_FORTRAN_BUILD_EXE \"${UPARSER_TEST_FORTRAN_BUILD_EXE}\")")
 install(CODE 
         "set(UPARSER_TEST_FORTRAN_INSTALL_DIR \"${UPARSER_TEST_FORTRAN_INSTALL_DIR}\")")
+
+## Add the paths of the c_examples target which we need during post-install.
+get_directory_property(UPARSER_C_EXAMPLES_FILES DIRECTORY 
+                       examples/src DEFINITION UPARSER_C_EXAMPLES_FILES)
+get_directory_property(UPARSER_C_EXAMPLES_INSTALL_DIR DIRECTORY 
+                       examples/src DEFINITION UPARSER_C_EXAMPLES_INSTALL_DIR)
+install(CODE 
+        "set(UPARSER_C_EXAMPLES_FILES \"${UPARSER_C_EXAMPLES_FILES}\")")
+install(CODE 
+        "set(UPARSER_C_EXAMPLES_INSTALL_DIR \"${UPARSER_C_EXAMPLES_INSTALL_DIR}\")")
+
+## Add the paths of the fortran_examples target which 
+## we need during post-install.
+get_directory_property(UPARSER_FORTRAN_EXAMPLES_FILES DIRECTORY 
+                       examples/fortran_interface 
+                       DEFINITION UPARSER_FORTRAN_EXAMPLES_FILES)
+get_directory_property(UPARSER_FORTRAN_EXAMPLES_INSTALL_DIR DIRECTORY 
+                       examples/fortran_interface 
+                       DEFINITION UPARSER_FORTRAN_EXAMPLES_INSTALL_DIR)
+install(CODE 
+        "set(UPARSER_FORTRAN_EXAMPLES_FILES \"${UPARSER_FORTRAN_EXAMPLES_FILES}\")")
+install(CODE 
+        "set(UPARSER_FORTRAN_EXAMPLES_INSTALL_DIR \"${UPARSER_FORTRAN_EXAMPLES_INSTALL_DIR}\")")
 
 ## Add a subdirectory that contains the post-install scripts.
 add_subdirectory(${CMAKE_SOURCE_DIR}/cmake/post_install)
