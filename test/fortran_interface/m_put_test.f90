@@ -17,7 +17,7 @@
 !!
 !! THIS SOFTWARE IS PROVIDED "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
 !! INCLUDING, BUT NOT LIMITED TO, WARRANTIES OF MERCHANTABILITY AND FITNESS
-!! FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT 
+!! FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
 !! HOLDER OR ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
 !! SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
 !! PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
@@ -26,24 +26,36 @@
 !! NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 !! SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 !!
-!! @file uparser_test_fortran.f90
+!! @file m_put_test.f90
 !! @author Issam SAID
-!! @brief The main file to launch the unit testing of the uparser
-!!        Fortran interface.
+!! @brief Unit testing file for the uparser Fortran put routine.
 !<
-program uparser_test_fortran
-    use m_core_test
-    use m_put_test
+module m_put_test
     use m_handler
-
-    implicit none
+    use m_uparser_core
+    use m_uparser_put
     
-    call handler_start()
+    implicit none
 
-    call core_test()
-    call put_test()
+    private
 
-    call handler_end()
-    call handler_stat()
+    public :: put_test
+    
+contains
+    
+    logical function from_cmdline() result(status)
+        implicit none
+        status = .true.
+    end function from_cmdline
+    
+    subroutine setup()
+    end subroutine setup
 
-end program uparser_test_fortran
+    subroutine teardown()
+    end subroutine teardown
+
+    subroutine put_test()
+        call run(setup, teardown, from_cmdline, "put_test.from_cmdline")
+    end subroutine put_test
+
+end module m_put_test
