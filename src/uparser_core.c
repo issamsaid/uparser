@@ -55,13 +55,13 @@ void uparser_init(int argc, char** argv) {
         up->argv         = argv;
         sprintf(up->exe_name, "%s", argv[0]);
 
-        uparser_get_bool    = &uparser_get_bool_single;
-        uparser_get_char    = &uparser_get_char_single;
-        uparser_get_string  = &uparser_get_string_single;
-        uparser_get_int32   = &uparser_get_int32_single;
-        uparser_get_int64   = &uparser_get_int64_single;
-        uparser_get_float   = &uparser_get_float_single;
-        uparser_get_double  = &uparser_get_double_single;
+        up->get_bool    = &uparser_get_bool_single;
+        up->get_char    = &uparser_get_char_single;
+        up->get_string  = &uparser_get_string_single;
+        up->get_int32   = &uparser_get_int32_single;
+        up->get_int64   = &uparser_get_int64_single;
+        up->get_float   = &uparser_get_float_single;
+        up->get_double  = &uparser_get_double_single;
 
     }
 }

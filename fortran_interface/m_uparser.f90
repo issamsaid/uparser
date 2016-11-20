@@ -33,4 +33,6 @@
 module m_uparser
     use m_uparser_core
     use m_uparser_util
+    use m_uparser_get
+    use m_uparser_put
 end module m_uparser

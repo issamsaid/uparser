@@ -63,30 +63,30 @@ module m_uparser_get
 
         subroutine c_uparser_get_int32(key, val) &
             bind(c, name='uparser_get_int32')
-            use, intrinsic :: iso_c_binding, only: c_char, c_int
+            use, intrinsic :: iso_c_binding, only: c_char, c_ptr
             character(kind=c_char), intent(in) :: key
-            integer(kind=c_int),   intent(out) :: val
+            type(c_ptr),     value, intent(in) :: val
         end subroutine c_uparser_get_int32
 
         subroutine c_uparser_get_int64(key, val) &
             bind(c, name='uparser_get_int64')
-            use, intrinsic :: iso_c_binding, only: c_char, c_int64_t
-            character(kind=c_char),   intent(in) :: key
-            integer(kind=c_int64_t), intent(out) :: val
+            use, intrinsic :: iso_c_binding, only: c_char, c_ptr
+            character(kind=c_char), intent(in) :: key
+            type(c_ptr),     value, intent(in) :: val
         end subroutine c_uparser_get_int64
 
         subroutine c_uparser_get_float(key, val) &
             bind(c, name='uparser_get_float')
-            use, intrinsic :: iso_c_binding, only: c_char, c_float
+            use, intrinsic :: iso_c_binding, only: c_char, c_ptr
             character(kind=c_char), intent(in) :: key
-            real(kind=c_float),    intent(out) :: val
+            type(c_ptr),     value, intent(in) :: val
         end subroutine c_uparser_get_float
 
         subroutine c_uparser_get_double(key, val) &
             bind(c, name='uparser_get_double')
-            use, intrinsic :: iso_c_binding, only: c_char, c_double
+            use, intrinsic :: iso_c_binding, only: c_char, c_ptr
             character(kind=c_char), intent(in) :: key
-            real(kind=c_double),   intent(out) :: val
+            type(c_ptr),     value, intent(in) :: val
         end subroutine c_uparser_get_double
 
     end interface
@@ -96,9 +96,13 @@ module m_uparser_get
         module procedure uparser_get_bool
         module procedure uparser_get_string
         module procedure uparser_get_int32
+        module procedure uparser_get_vect_int32
         module procedure uparser_get_int64
+        module procedure uparser_get_vect_int64
         module procedure uparser_get_float
+        module procedure uparser_get_vect_float
         module procedure uparser_get_double
+        module procedure uparser_get_vect_double
     end interface uparser_get
 
 contains
@@ -107,7 +111,7 @@ contains
         character(len=*), intent(in) :: key
         logical,         intent(out) :: val
         logical(kind=c_bool)         :: cval
-        call c_parser_get_bool(trim(key)//c_null_char, cval)
+        call c_uparser_get_bool(trim(key)//c_null_char, cval)
         val = cval
     end subroutine uparser_get_bool
 
@@ -117,9 +121,9 @@ contains
         integer(kind=4)               :: len_val
         val          = ""
         if (len(key) .eq. 1) then
-            call cparser_get_char(trim(key)//c_null_char, val)
+            call c_uparser_get_char(trim(key)//c_null_char, val)
         else
-            call cparser_get_string(trim(key)//c_null_char, val)
+            call c_uparser_get_string(trim(key)//c_null_char, val)
             len_val                = len_trim(val)
             val(len_val:len_val+1) = ''
         endif
@@ -128,25 +132,73 @@ contains
     subroutine uparser_get_int32(key, val)
         character(len=*), intent(in) :: key
         integer(kind=4), intent(out) :: val
-        call c_parser_get_int32(trim(key)//c_null_char, val)
+
+        integer(kind=c_int), target :: tab(1)
+        call c_uparser_get_int32(trim(key)//c_null_char, c_loc(tab))
+        val = tab(1)
     end subroutine uparser_get_int32
+
+    subroutine uparser_get_vect_int32(key, val)
+        character(len=*), intent(in) :: key
+        integer(kind=4), intent(out) :: val(:)
+
+        integer(kind=c_int), dimension(size(val)), target :: tab
+        call c_uparser_get_int32(trim(key)//c_null_char, c_loc(tab))
+        val = tab
+    end subroutine uparser_get_vect_int32
 
     subroutine uparser_get_int64(key, val)
         character(len=*), intent(in) :: key
         integer(kind=8), intent(out) :: val
-        call c_parser_get_int64(trim(key)//c_null_char, val)
+
+        integer(kind=c_int64_t), target :: tab(1)
+        call c_uparser_get_int64(trim(key)//c_null_char, c_loc(tab))
+        val = tab(1)
     end subroutine uparser_get_int64
+
+    subroutine uparser_get_vect_int64(key, val)
+        character(len=*), intent(in) :: key
+        integer(kind=8), intent(out) :: val(:)
+
+        integer(kind=c_int64_t), dimension(size(val)), target :: tab
+        call c_uparser_get_int64(trim(key)//c_null_char, c_loc(tab))
+        val = tab
+    end subroutine uparser_get_vect_int64
 
     subroutine uparser_get_float(key, val)
         character(len=*), intent(in) :: key
         real(kind=4),    intent(out) :: val
-        call c_parser_get_float(trim(key)//c_null_char, val)
+
+        real(kind=c_float), target :: tab(1)
+        call c_uparser_get_float(trim(key)//c_null_char, c_loc(tab))
+        val = tab(1)
     end subroutine uparser_get_float
+
+    subroutine uparser_get_vect_float(key, val)
+        character(len=*), intent(in) :: key
+        real(kind=4),    intent(out) :: val(:)
+
+        real(kind=c_float), dimension(size(val)), target :: tab
+        call c_uparser_get_float(trim(key)//c_null_char, c_loc(tab))
+        val = tab
+    end subroutine uparser_get_vect_float
 
     subroutine uparser_get_double(key, val)
         character(len=*), intent(in) :: key
         real(kind=8),    intent(out) :: val
-        call c_parser_get_double(trim(key)//c_null_char, val)
+
+        real(kind=c_double), target :: tab(1)
+        call c_uparser_get_double(trim(key)//c_null_char, c_loc(tab))
+        val = tab(1)
     end subroutine uparser_get_double
+
+    subroutine uparser_get_vect_double(key, val)
+        character(len=*), intent(in) :: key
+        real(kind=8),    intent(out) :: val(:)
+
+        real(kind=c_double), dimension(size(val)), target :: tab
+        call c_uparser_get_double(trim(key)//c_null_char, c_loc(tab))
+        val = tab
+    end subroutine uparser_get_vect_double
         
 end module m_uparser_get

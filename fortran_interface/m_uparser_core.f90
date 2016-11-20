@@ -43,8 +43,8 @@ module m_uparser_core
         subroutine c_uparser_init(argc, argv) bind(c, name = "uparser_init")
             use, intrinsic :: iso_c_binding, only: c_int, c_ptr
             implicit none
-            integer(kind=c_int), intent(in), value :: argc
-            type(c_ptr), intent(in),         value :: argv
+            integer(kind=c_int), value, intent(in) :: argc
+            type(c_ptr), dimension(*),  intent(in) :: argv
         end subroutine c_uparser_init
 
         subroutine c_uparser_load(filename) bind(c, name = "uparser_load")

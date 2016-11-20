@@ -32,10 +32,32 @@
 ///
 #include <uparser/types.h>
 
-uparser_get_bool_function_t    uparser_get_bool;
-uparser_get_char_function_t    uparser_get_char;
-uparser_get_string_function_t  uparser_get_string;
-uparser_get_int32_function_t   uparser_get_int32;
-uparser_get_int64_function_t   uparser_get_int64;
-uparser_get_float_function_t   uparser_get_float;
-uparser_get_double_function_t  uparser_get_double;
+extern uparser_t *up;
+
+void uparser_get_bool(const char *key, bool *value) {
+    return up->get_bool(key, value);
+}
+
+void uparser_get_int32(const char *key, int *value) {
+    return up->get_int32(key, value);
+}
+
+void uparser_get_int64(const char *key, int64_t *value) {
+    return up->get_int64(key, value);
+}
+
+void uparser_get_char(const char *key, char *value) {
+    return up->get_char(key, value);
+}
+
+void uparser_get_string(const char *key, char *value) {
+    return up->get_string(key, value);
+}
+
+void uparser_get_float(const char *key, float *value) {
+    return up->get_float(key, value);
+}
+
+void uparser_get_double(const char *key, double *value) {
+    return up->get_double(key, value);
+}

@@ -37,13 +37,13 @@
 
 CPPGUARD_BEGIN();
 
-extern uparser_get_bool_function_t    uparser_get_bool;
-extern uparser_get_char_function_t    uparser_get_char;
-extern uparser_get_string_function_t  uparser_get_string;
-extern uparser_get_int32_function_t   uparser_get_int32;
-extern uparser_get_int64_function_t   uparser_get_int64;
-extern uparser_get_float_function_t   uparser_get_float;
-extern uparser_get_double_function_t  uparser_get_double;
+void uparser_get_bool(const char *key, bool *value);
+void uparser_get_char(const char *key, char *value);
+void uparser_get_string(const char *key, char *value);
+void uparser_get_int32(const char *key, int *value);
+void uparser_get_int64(const char *key, int64_t *value);
+void uparser_get_float(const char *key, float *value);
+void uparser_get_double(const char *key, double *value);
 
 CPPGUARD_END();
 

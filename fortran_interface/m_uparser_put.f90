@@ -44,27 +44,45 @@ module m_uparser_put
                                  bind(c, name = "uparser_put")
             use, intrinsic :: iso_c_binding, only: c_char
             implicit none
-            character(kind=c_char), intent(in) :: short_key
-            character(kind=c_char), intent(in) :: long_key
-            character(kind=c_char), intent(in) :: default_value
-            character(kind=c_char), intent(in) :: help_message
+            character(kind=c_char, len=1), value, intent(in) :: short_key
+            character(kind=c_char),               intent(in) :: long_key
+            character(kind=c_char),               intent(in) :: default_value
+            character(kind=c_char),               intent(in) :: help_message
         end subroutine c_uparser_put
-
     end interface
 
     public :: uparser_put
+    interface uparser_put
+        module procedure uparser_put_with_short_key
+        module procedure uparser_put_no_short_key
+    end interface uparser_put
 
 contains
     
-    subroutine uparser_put(short_key, long_key, default_value, help_message)
-        character(len=1), intent(in) :: short_key
-        character(len=*), intent(in) :: long_key
-        character(len=*), intent(in) :: default_value
-        character(len=*), intent(in) :: help_message
-        call c_parser_put(short_key,                        &
-                          trim(long_key)//c_null_char,      &
-                          trim(default_value)//c_null_char, &
-                          trim(help_message)//c_null_char)
-    end subroutine uparser_put
+    subroutine uparser_put_with_short_key(short_key, long_key, &
+                                          default_value, help_message)
+        character(len=1),  intent(in) :: short_key
+        character(len=*),  intent(in) :: long_key
+        character(len=*),  intent(in) :: default_value
+        character(len=*),  intent(in) :: help_message
+
+        character(len=1, kind=c_char) :: c 
+        c = short_key
+        call c_uparser_put(c,                                &
+                           trim(long_key)//c_null_char,      &
+                           trim(default_value)//c_null_char, &
+                           trim(help_message)//c_null_char)
+    end subroutine uparser_put_with_short_key
+
+    subroutine uparser_put_no_short_key(long_key, default_value, help_message)
+        character(len=*),  intent(in) :: long_key
+        character(len=*),  intent(in) :: default_value
+        character(len=*),  intent(in) :: help_message
+        
+        call c_uparser_put(c_null_char,                      &
+                           trim(long_key)//c_null_char,      &
+                           trim(default_value)//c_null_char, &
+                           trim(help_message)//c_null_char)
+    end subroutine uparser_put_no_short_key
         
 end module m_uparser_put

@@ -42,37 +42,68 @@
 /// @return Error code if any.
 ///
 int main(int argc, char **argv) {
-    int i;
-    int64_t I;
+    int i, vect_i[3];
+    int64_t I, vect_I[3];
     bool b = false;
-    char s[64]; 
+    char s[64];
+    float f, vect_f[3];
+    double d, vect_d[3];
+
     fprintf(stdout, "... start of the simple parser info example\n");
 
     ///< Initialize uparser.
     uparser_init(argc, argv);
 
     ///< Populate the parser.
-    uparser_put('i', "int32",  "2", "this is a 32 bits integer");
-    uparser_put('I', "int64", "-9", "this is a 64 bits integer");
+    uparser_put('i', "int32",   "2",     "this is a 32 bits integer");
+    uparser_put('I', "int64",   "-9",    "this is a 64 bits integer");
     uparser_put('b', "boolean", "false", "this is a boolean");
-    uparser_put('s', "string",  "foo", "this is a string");
+    uparser_put('s', "string",  "foo",   "this is a string");
+    uparser_put('f', "float",   "1.33",  "this is a float");
+    uparser_put('d', "double",  "9.77",  "this is a double");
+
+    uparser_put(0, "vint32",           "1,2,3", "this is a 32bits integer tab");
+    uparser_put(0, "vint64",           "4,5,6", "this is a 64bits integer tab");
+    uparser_put(0, "vfloat",  "1.22,2,33,4,55", "this is a float tab");
+    uparser_put(0, "vdouble", "9.77,8,66,7,66", "this is a double tab");
 
     ///< Parse the command line arguments.
     uparser_parse();
 
+    ///< Show the uparser help.
+    uparser_usage();
+
     ///< Get values.
-    uparser_get_int32("i",      &i);
-    uparser_get_int32("int32",  &i);
-    uparser_get_int64("I",      &I);
-    uparser_get_int64("int64",  &I);
-    uparser_get_bool("boolean", &b);
-    uparser_get_string("string", s);
+    uparser_get_int32("i",       &i);
+    uparser_get_int32("int32",   &i);
+    uparser_get_int64("I",       &I);
+    uparser_get_int64("int64",   &I);
+    uparser_get_bool("boolean",  &b);
+    uparser_get_string("string",  s);
+    uparser_get_float("float",   &f);
+    uparser_get_double("double", &d);
 
-    fprintf(stdout, "... param int32 value is   '%d'\n", i);
-    fprintf(stdout, "... param int64 value is   '%ld'\n", I);
+    uparser_get_int32("vint32", vect_i);
+    uparser_get_int64("vint64", vect_I);
+    uparser_get_float("vfloat", vect_f);
+    uparser_get_double("vdouble", vect_d);
+
+    fprintf(stdout, "... param int32   value is '%d'\n", i);
+    fprintf(stdout, "... param int64   value is '%ld'\n", I);
     fprintf(stdout, "... param boolean value is '%s'\n", b ? "true" : "false");
-    fprintf(stdout, "... param string value is  '%s'\n", s);
+    fprintf(stdout, "... param string  value is '%s'\n", s);
+    fprintf(stdout, "... param float   value is '%f'\n", f);
+    fprintf(stdout, "... param double  value is '%f'\n", d);  
 
+    fprintf(stdout, "... param vint32  value is '%d,%d,%d'\n", 
+            vect_i[0], vect_i[1], vect_i[2]);  
+    fprintf(stdout, "... param vint64  value is '%ld,%ld,%ld'\n", 
+            vect_I[0], vect_I[1], vect_I[2]);  
+    fprintf(stdout, "... param vfloat  value is '%f,%f,%f'\n", 
+            vect_f[0], vect_f[1], vect_f[2]);  
+    fprintf(stdout, "... param vdouble value is '%f,%f,%f'\n",
+            vect_d[0], vect_d[1], vect_d[2]);  
+ 
     ///< Release uparser.
     uparser_release();
     fprintf(stdout, "... end   of the simple parser info example\n");
