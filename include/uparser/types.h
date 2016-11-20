@@ -46,6 +46,7 @@ typedef struct __uparser_arg_t {
     char *long_key;
     char *help_message;
     char *value;
+    bool boolean;
 } uparser_arg_t;
 
 typedef struct __uparser_t {

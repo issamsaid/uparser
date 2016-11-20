@@ -64,6 +64,8 @@ void uparser_put(const char short_key,
         sprintf(arg->long_key, "%s", long_key);
         arg->value        = (char*)malloc(sizeof(char)*strlen(default_value));
         sprintf(arg->value, "%s", default_value);
+        arg->boolean      = ((strcmp(arg->value,  "true")==0) || 
+                             (strcmp(arg->value, "false")==0)) ? true : false;
         arg->help_message = (char*)malloc(sizeof(char)*strlen(help_message));
         sprintf(arg->help_message, "%s", help_message);
 

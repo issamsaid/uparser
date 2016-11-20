@@ -44,23 +44,34 @@
 int main(int argc, char **argv) {
     int i;
     int64_t I;
+    bool b = false;
+    char s[64]; 
     fprintf(stdout, "... start of the simple parser info example\n");
 
     ///< Initialize uparser.
     uparser_init(argc, argv);
 
     ///< Populate the parser.
-    uparser_put('i', "int32",  "2",  "this is a 32 bits integer");
+    uparser_put('i', "int32",  "2", "this is a 32 bits integer");
     uparser_put('I', "int64", "-9", "this is a 64 bits integer");
+    uparser_put('b', "boolean", "false", "this is a boolean");
+    uparser_put('s', "string",  "foo", "this is a string");
 
     ///< Parse the command line arguments.
     uparser_parse();
 
     ///< Get values.
-    uparser_get_int32("i",     &i);
-    uparser_get_int32("int32", &i);
-    uparser_get_int64("I",     &I);
-    uparser_get_int64("int64", &I);
+    uparser_get_int32("i",      &i);
+    uparser_get_int32("int32",  &i);
+    uparser_get_int64("I",      &I);
+    uparser_get_int64("int64",  &I);
+    uparser_get_bool("boolean", &b);
+    uparser_get_string("string", s);
+
+    fprintf(stdout, "... param int32 value is   '%d'\n", i);
+    fprintf(stdout, "... param int64 value is   '%ld'\n", I);
+    fprintf(stdout, "... param boolean value is '%s'\n", b ? "true" : "false");
+    fprintf(stdout, "... param string value is  '%s'\n", s);
 
     ///< Release uparser.
     uparser_release();

@@ -1,0 +1,6 @@
+int32=23
+int64=9876543
+string=bar
+boolean=true
+I=123456
+par=examples/src/simple_parser/subfile.par

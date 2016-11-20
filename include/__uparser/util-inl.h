@@ -167,7 +167,7 @@ __uparser_line_iscomment(const char *line) {
 
 __UPARSER_PRIVATE bool
 __uparser_line_isempty(const char *line) {
-    return !((NULL == line) || (strlen(line) == 0));
+    return ((NULL == line) || (strlen(line) == 0));
 }
 
 __UPARSER_PRIVATE bool
@@ -207,8 +207,7 @@ __uparser_arg_print(void *ptr) {
                   arg->short_key ? "-"            : " ",
                   arg->short_key ? arg->short_key : ' ',
                   arg->short_key ? " "            : "  ",
-                  ((strcmp(arg->value, "true")  == 0) ||
-                   (strcmp(arg->value, "false") == 0))   ? " "  : "= [value]",
+                  arg->boolean   ? " "            : "= [value]",
                   arg->help_message);
 }
 
