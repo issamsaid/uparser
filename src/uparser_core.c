@@ -32,13 +32,13 @@
 ///        initialization, help and the finalization.
 ///
 #include <uparser/core.h>
-#include <uparser/types.h>
 #include <uparser/get.h>
 #include <uparser/put.h>
 #include <uparser/single/get.h>
+#include <__uparser/types-inl.h>
 #include <__uparser/util-inl.h>
 #include <__uparser/error-inl.h>
-#include <urb_tree/urb_tree.h>
+#include <__uparser/config/util.h>
 
 ///
 /// @brief A static uparser object that will be used internally.
@@ -148,7 +148,7 @@ void uparser_parse() {
                     /// this should be a long_key=value statement.
                     UPARSER_EXIT_IF(!__uparser_value_isvalid(value), 
                                     "argument value '%s' is not valid", value);
-                    if (__uparser_str_cmp(&key[2], UPARSER_FILE_KEYWORD) == 0) {
+                    if (__uparser_str_cmp(&key[2], __UPARSER_FILE_KEYWORD) == 0) {
                         uparser_load(value);
                     } else {
                         UPARSER_EXIT_IF((n=urb_tree_find(&up->long_lookup, 
@@ -227,7 +227,7 @@ void uparser_load(const char *filename) {
                 }
                 sprintf(*saved_value, "%s", s);
             } else {
-                if (__uparser_str_cmp(s, UPARSER_FILE_KEYWORD) == 0) {
+                if (__uparser_str_cmp(s, __UPARSER_FILE_KEYWORD) == 0) {
                     s = strtok_r(NULL, "=", &save_param);
                     UPARSER_EXIT_IF(!__uparser_value_isvalid(s), 
                                     "argument value '%s' is not valid", s);
@@ -271,7 +271,7 @@ void uparser_usage() {
         UPARSER_PRINT("--%-12s%s%-10s %s",
                       "help", ", -h ", " ", "show this help message");
         UPARSER_PRINT("--%-12s%-10s %s",
-                      UPARSER_FILE_KEYWORD, 
+                      __UPARSER_FILE_KEYWORD, 
                       "     = [value] ", "load parameters from file");
         urb_tree_walk(&up->long_lookup, NULL, __uparser_arg_print);
         UPARSER_PRINT("");

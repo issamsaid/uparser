@@ -34,5 +34,6 @@
 ///
 #define __UPARSER_STR_SIZE     64
 #define __UPARSER_BUFFER_SIZE  1024
+#define __UPARSER_FILE_KEYWORD "par"
 
 #endif  // __UPARSER_CONFIG_UTIL_H_

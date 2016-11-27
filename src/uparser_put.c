@@ -33,10 +33,9 @@
 ///        uparser lookup structures.
 ///
 #include <uparser/put.h>
-#include <uparser/types.h>
+#include <__uparser/types-inl.h>
 #include <__uparser/util-inl.h>
 #include <__uparser/error-inl.h>
-#include <urb_tree/urb_tree.h>
 
 extern uparser_t *up;
 

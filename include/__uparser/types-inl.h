@@ -1,5 +1,5 @@
-#ifndef __UUPARSER_FLAGS_H_
-#define __UUPARSER_FLAGS_H_
+#ifndef __UUPARSER_TYPES_INL_H_
+#define __UUPARSER_TYPES_INL_H_
 ///
 /// @copyright Copyright (c) 2016-, Issam SAID <said.issam@gmail.com>
 /// All rights reserved.
@@ -28,11 +28,48 @@
 /// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 /// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ///
-/// @file uparser/flags.h
+/// @file __uparser/types.h
 /// @author Issam SAID
-/// @brief
+/// @brief A set of internal structures to uparser, used to track the resources.
 ///
-#define UPARSER_MAX_STR      128
-#define UPARSER_FILE_KEYWORD "par"
+#include <stdbool.h>
+#include <stdint.h>
+#include <__uparser/config/guard.h>
+#include <urb_tree/urb_tree.h>
 
-#endif  // __UPARSER_FLAGS_H_ 
+CPPGUARD_BEGIN();
+
+typedef void (*bool_getter_t)   (const char*, bool*);
+typedef void (*char_getter_t)   (const char*, char*);
+typedef void (*string_getter_t) (const char*, char*);
+typedef void (*int32_getter_t)  (const char*, int*);
+typedef void (*int64_getter_t)  (const char*, int64_t*);
+typedef void (*float_getter_t)  (const char*, float*);
+typedef void (*double_getter_t) (const char*, double*);
+
+typedef struct __uparser_arg_t {
+    char short_key;
+    char *long_key;
+    char *help_message;
+    char *value;
+    bool boolean;
+} uparser_arg_t;
+
+typedef struct __uparser_t {
+    char  *exe_name;
+    int argc;
+    char **argv;
+    urb_t *short_lookup;
+    urb_t *long_lookup;
+    bool_getter_t   get_bool;
+    int32_getter_t  get_int32;
+    int64_getter_t  get_int64;
+    char_getter_t   get_char;
+    string_getter_t get_string;
+    float_getter_t  get_float;
+    double_getter_t get_double;
+} uparser_t;
+
+CPPGUARD_END();
+
+#endif  // __UPARSER_TYPES_INL_H_ 

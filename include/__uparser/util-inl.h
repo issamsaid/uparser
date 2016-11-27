@@ -38,7 +38,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <ctype.h>
-#include <uparser/types.h>
+#include <__uparser/types-inl.h>
 #include <__uparser/error-inl.h>
 #include <__uparser/config/guard.h>
 #include <__uparser/config/util.h>

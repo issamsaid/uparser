@@ -32,7 +32,8 @@
 /// @author Issam SAID
 /// @brief
 ///
-#include <uparser/types.h>
+#include <stdbool.h>
+#include <stdint.h>
 #include <__uparser/config/guard.h>
 
 CPPGUARD_BEGIN();

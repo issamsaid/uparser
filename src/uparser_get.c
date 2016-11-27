@@ -30,7 +30,7 @@
 /// @author Issam SAID
 /// @brief
 ///
-#include <uparser/types.h>
+#include <__uparser/types-inl.h>
 
 extern uparser_t *up;
 

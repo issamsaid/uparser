@@ -32,7 +32,6 @@
 /// @author Issam SAID
 /// @brief
 ///
-#include <uparser/types.h>
 #include <__uparser/config/guard.h>
 
 CPPGUARD_BEGIN();
@@ -49,4 +48,4 @@ void uparser_put(const char short_key, const char *long_key,
 
 CPPGUARD_END();
 
-#endif // __UPARSER_GET_H_
+#endif // __UPARSER_PUT_H_
