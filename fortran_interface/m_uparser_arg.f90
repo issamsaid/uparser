@@ -17,33 +17,47 @@
 !!
 !! THIS SOFTWARE IS PROVIDED "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
 !! INCLUDING, BUT NOT LIMITED TO, WARRANTIES OF MERCHANTABILITY AND FITNESS
-!! FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT 
-!! HOLDER OR ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
-!! SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+!! FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPY OR
+!! ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+!! EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
 !! PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
 !! PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
 !! LIABILITY, WETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
 !! NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 !! SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 !!
-!! @file uparser_test_fortran.f90
+!! @file fortran_interface/m_uparser_arg.f90
 !! @author Issam SAID
-!! @brief The main file to launch the unit testing of the uparser
-!!        Fortran interface.
+!! @brief This file implements the Fortran interface of the uparser_arg routine.  
+!! @see uparser/arg.h
 !<
-program uparser_test_fortran
-    use m_core_test
-    use m_opt_test
-    use m_handler
+module m_uparser_arg
+    use, intrinsic :: iso_c_binding
 
     implicit none
+
+    private
+
+    interface
+        subroutine c_uparser_arg(arg_name, help_message) &
+                                 bind(c, name = "uparser_arg")
+            use, intrinsic :: iso_c_binding, only: c_char
+            implicit none
+            character(kind=c_char), intent(in) :: arg_name
+            character(kind=c_char), intent(in) :: help_message
+        end subroutine c_uparser_arg
+    end interface
+
+    public :: uparser_arg
+
+contains
     
-    call handler_start()
-
-    call core_test()
-    call opt_test()
-
-    call handler_end()
-    call handler_stat()
-
-end program uparser_test_fortran
+    subroutine uparser_arg(arg_name, help_message)
+        character(len=*),  intent(in) :: arg_name
+        character(len=*),  intent(in) :: help_message
+        
+        call c_uparser_arg(trim(arg_name)//c_null_char,  &
+                           trim(help_message)//c_null_char)
+    end subroutine uparser_arg
+        
+end module m_uparser_arg

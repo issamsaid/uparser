@@ -35,11 +35,12 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
+#include <__uparser/types-inl.h>
 #include <__uparser/util-inl.h>
 #include <__uparser/config/util.h>
 #include <urb_tree/urb_tree.h>
 
-extern uparser_t *up;
+extern __uparser_t *up;
 
 void uparser_get_bool_single(const char *key, bool *value) {
     urb_t *n; const char *vptr;
@@ -54,7 +55,7 @@ void uparser_get_bool_single(const char *key, bool *value) {
                         __uparser_str_cmp)) == &urb_sentinel,
                         "key '%s' not recognized", key);
     }
-    vptr = ((uparser_arg_t *)n->value)->value;
+    vptr = ((__uparser_map_t *)n->value)->value;
     if (strcmp(vptr, "true") == 0) *value = true;
     else *value = false;
 }
@@ -72,7 +73,7 @@ void uparser_get_char_single(const char *key, char *value) {
                         __uparser_str_cmp)) == &urb_sentinel,
                         "key '%s' not recognized", key);
     }
-    vptr = ((uparser_arg_t *)n->value)->value;
+    vptr = ((__uparser_map_t *)n->value)->value;
     int count = __uparser_str_tokcount(vptr, ",");
     char tmp[count][__UPARSER_STR_SIZE];
     __uparser_str_split(vptr, ",", count, tmp);
@@ -93,7 +94,7 @@ void uparser_get_string_single(const char *key, char *value) {
                         __uparser_str_cmp)) == &urb_sentinel,
                         "key '%s' not recognized", key);
     }
-    vptr = ((uparser_arg_t *)n->value)->value;
+    vptr = ((__uparser_map_t *)n->value)->value;
     sprintf(value, "%s", vptr);
 }
 
@@ -110,7 +111,7 @@ void uparser_get_int32_single(const char *key, int *value) {
                         __uparser_str_cmp)) == &urb_sentinel,
                         "key '%s' not recognized", key);
     }
-    vptr = ((uparser_arg_t *)n->value)->value;
+    vptr = ((__uparser_map_t *)n->value)->value;
     int count = __uparser_str_tokcount(vptr, ",");
     char tmp[count][__UPARSER_STR_SIZE];
     __uparser_str_split(vptr, ",", count, tmp);
@@ -131,7 +132,7 @@ void uparser_get_int64_single(const char *key, int64_t *value) {
                         __uparser_str_cmp)) == &urb_sentinel,
                         "key '%s' not recognized", key);
     }
-    vptr = ((uparser_arg_t *)n->value)->value;
+    vptr = ((__uparser_map_t *)n->value)->value;
     int count = __uparser_str_tokcount(vptr, ",");
     char tmp[count][__UPARSER_STR_SIZE];
     __uparser_str_split(vptr, ",", count, tmp);
@@ -152,7 +153,7 @@ void uparser_get_float_single(const char *key, float *value) {
                         __uparser_str_cmp)) == &urb_sentinel,
                         "key '%s' not recognized", key);
     }
-    vptr = ((uparser_arg_t *)n->value)->value;
+    vptr = ((__uparser_map_t *)n->value)->value;
     int count = __uparser_str_tokcount(vptr, ",");
     char tmp[count][__UPARSER_STR_SIZE];
     __uparser_str_split(vptr, ",", count, tmp);
@@ -173,7 +174,7 @@ void uparser_get_double_single(const char *key, double *value) {
                         __uparser_str_cmp)) == &urb_sentinel,
                         "key '%s' not recognized", key);
     }
-    vptr = ((uparser_arg_t *)n->value)->value;
+    vptr = ((__uparser_map_t *)n->value)->value;
     int count = __uparser_str_tokcount(vptr, ",");
     char tmp[count][__UPARSER_STR_SIZE];
     __uparser_str_split(vptr, ",", count, tmp);

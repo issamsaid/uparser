@@ -26,20 +26,20 @@
 !! NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 !! SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 !!
-!! @file m_put_test.f90
+!! @file m_opt_test.f90
 !! @author Issam SAID
-!! @brief Unit testing file for the uparser Fortran put routine.
+!! @brief Unit testing file for the uparser_opt Fortran routine.
 !<
-module m_put_test
+module m_opt_test
     use m_handler
     use m_uparser_core
-    use m_uparser_put
+    use m_uparser_opt
     
     implicit none
 
     private
 
-    public :: put_test
+    public :: opt_test
     
 contains
     
@@ -54,8 +54,8 @@ contains
     subroutine teardown()
     end subroutine teardown
 
-    subroutine put_test()
-        call run(setup, teardown, from_cmdline, "put_test.from_cmdline")
-    end subroutine put_test
+    subroutine opt_test()
+        call run(setup, teardown, from_cmdline, "opt_test.from_cmdline")
+    end subroutine opt_test
 
-end module m_put_test
+end module m_opt_test

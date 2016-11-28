@@ -26,7 +26,7 @@
 !! NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 !! SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 !!
-!! @file m_uparser.f90
+!! @file fortran_interface/m_uparser.f90
 !! @author Issam SAID
 !! @brief This file groups all the uparser Fortran modules in one.
 !<
@@ -34,5 +34,6 @@ module m_uparser
     use m_uparser_core
     use m_uparser_util
     use m_uparser_get
-    use m_uparser_put
+    use m_uparser_opt
+    use m_uparser_arg
 end module m_uparser

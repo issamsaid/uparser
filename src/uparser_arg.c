@@ -26,56 +26,44 @@
 /// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 /// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ///
-/// @file src/uparser_put.c
+/// @file src/uparser_arg.c
 /// @author Issam SAID
-/// @brief Implementation of the core uparser put function 
-///        which inserts a key value pair into the internal 
-///        uparser lookup structures.
+/// @brief Implementation of the core uparser_arg function 
+///        which inserts a mandatory argument into the internal 
+///        uparser lookup table (an argument is mandatory and 
+///        have to have a value after parsing).
 ///
-#include <uparser/put.h>
+#include <uparser/arg.h>
 #include <__uparser/types-inl.h>
 #include <__uparser/util-inl.h>
 #include <__uparser/error-inl.h>
 
-extern uparser_t *up;
+extern __uparser_t *up;
 
-void uparser_put(const char short_key,
-                 const char *long_key, 
-                 const char *default_value, const char *help_message) {
-    uparser_arg_t *arg; 
+void uparser_arg(const char *arg_name, const char *help_message) {
+    __uparser_map_t *arg; int *idx; 
     if (up != NULL) {
-        UPARSER_EXIT_IF(long_key == NULL || strlen(long_key) == 0, 
-                        "the long key can not be empty");
-        UPARSER_EXIT_IF(default_value == NULL || strlen(default_value) == 0, 
-                        "the default value can not be empty");
+        UPARSER_EXIT_IF(arg_name == NULL || strlen(arg_name) == 0, 
+                        "the argument name can not be empty");
         UPARSER_EXIT_IF(help_message == NULL || strlen(help_message) == 0, 
                         "the help message can not be empty");
         UPARSER_EXIT_IF((urb_tree_find(&up->long_lookup, 
-                        (void*)long_key, __uparser_str_cmp) != &urb_sentinel), 
-                        "long key '%s' is already taken", long_key);
-        UPARSER_EXIT_IF((short_key != 0) && (urb_tree_find(&up->short_lookup, 
-                        (void*)&short_key,__uparser_char_cmp) != &urb_sentinel), 
-                        "short key '%c' is already taken", short_key);
- 
-        arg               = (uparser_arg_t*) malloc(sizeof(uparser_arg_t));
-        arg->short_key    = short_key;
-        arg->long_key     = (char*)malloc(sizeof(char)*strlen(long_key));
-        sprintf(arg->long_key, "%s", long_key);
-        arg->value        = (char*)malloc(sizeof(char)*strlen(default_value));
-        sprintf(arg->value, "%s", default_value);
-        arg->boolean      = ((strcmp(arg->value,  "true")==0) || 
-                             (strcmp(arg->value, "false")==0)) ? true : false;
+                        (void*)arg_name, __uparser_str_cmp) != &urb_sentinel), 
+                        "argument name '%s' is already taken", arg_name); 
+        arg               = (__uparser_map_t*) malloc(sizeof(__uparser_map_t));
+        arg->long_key     = (char*)malloc(sizeof(char)*strlen(arg_name));
+        arg->short_key    = 0;
+        arg->flags        = __UPARSER_ARG;
+        sprintf(arg->long_key, "%s", arg_name);
+        arg->value        = NULL;
         arg->help_message = (char*)malloc(sizeof(char)*strlen(help_message));
         sprintf(arg->help_message, "%s", help_message);
-
-        if (short_key != 0) {
-            urb_tree_put(&up->short_lookup, 
-                         urb_tree_create(&arg->short_key, 
-                                        (void*)arg), __uparser_char_cmp);
-        }
         urb_tree_put(&up->long_lookup, 
                      urb_tree_create(arg->long_key, 
                                     (void*)arg), __uparser_str_cmp);
-
+        idx  = (int*)malloc(sizeof(int));
+        *idx = up->nb_args++;
+        urb_tree_put(&up->args_index, 
+                     urb_tree_create(idx, (void*)arg), __uparser_int_cmp);
     }
 }

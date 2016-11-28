@@ -1,5 +1,5 @@
-#ifndef __UPARSER_PUT_H_
-#define __UPARSER_PUT_H_
+#ifndef __UPARSER_ARG_H_
+#define __UPARSER_ARG_H_
 ///
 /// @copyright Copyright (c) 2016-, Issam SAID <said.issam@gmail.com>
 /// All rights reserved.
@@ -28,7 +28,7 @@
 /// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 /// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ///
-/// @file uparser/put.h
+/// @file uparser/arg.h
 /// @author Issam SAID
 /// @brief
 ///
@@ -43,9 +43,8 @@ CPPGUARD_BEGIN();
 /// @param
 /// @return
 ///
-void uparser_put(const char short_key, const char *long_key,
-                 const char *default_value, const char *help_message);
+void uparser_arg(const char *arg_name, const char *help_message);
 
 CPPGUARD_END();
 
-#endif // __UPARSER_PUT_H_
+#endif // __UPARSER_ARG_H_

@@ -34,7 +34,8 @@
 ///
 
 #include <uparser/core.h>
-#include <uparser/put.h>
+#include <uparser/opt.h>
+#include <uparser/arg.h>
 #include <uparser/get.h>
 #include <uparser/util.h>
 

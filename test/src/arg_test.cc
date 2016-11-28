@@ -26,22 +26,22 @@
 /// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 /// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ///
-/// @file test/src/Put_test.cc
+/// @file test/src/arg_test.cc
 /// @author Issam SAID
-/// @brief Unit testing file for the uparser Put routine.
+/// @brief Unit testing file for the uparser_arg routine.
 /// 
 #include <gtest/gtest.h>
 #include <uparser/uparser.h>
 
 namespace {
 
-    class PutTest : public ::testing::Test {
+    class ArgTest : public ::testing::Test {
     protected:
         int    argc;
         char **argv; 
         virtual void SetUp() {
             int i;
-            argc = 13;
+            argc = 16;
             argv = (char**)malloc(sizeof(char*)*argc);
             for (i=0; i<argc; i++) argv[i] = (char*)malloc(sizeof(char)*64);
             sprintf(argv[0],  "%s", "uparser_test");
@@ -57,33 +57,35 @@ namespace {
             sprintf(argv[12], "%s", "--vfloat=1.34,2.52,3.14");
             sprintf(argv[4],  "%s", "--double=1.34");
             sprintf(argv[6],  "%s", "--vdouble=1.34,2.52,3.14");
+            sprintf(argv[13], "%s", "501");
+            sprintf(argv[14], "%s", "502");
+            sprintf(argv[15], "%s", "503");
 
             uparser_init(argc, argv);
-            uparser_put('b', "boolean", "false", "boolean argument");
-            uparser_put( 0 , "fake_boolean", "false", "fake boolean argument");
-            uparser_put('i', "int32",     "-1", "integer argument");
-            uparser_put( 0 , "fake_int32", "-1", "integer argument");
-            uparser_put('c', "char",       "B", "char argument");
-            uparser_put( 0 , "fake_char",  "B", "char argument");
-            uparser_put('s', "string",   "bar", "string argument");
-            uparser_put( 0 , "fake_string",   "bar", "fake string argument");
-            uparser_put( 0 , "vchar", "X,X,X", "vchar argument");
-            uparser_put( 0 , "fake_vchar",    "X,X,X", "vchar argument");
-            uparser_put( 0 , "vint32", "-1,-1,-1", "vint32 argument");
-            uparser_put( 0 , "fake_vint32", "-1,-1,-1", "fake vint32 argument");
-            uparser_put('I', "int64", "-1", "int64 argument");
-            uparser_put( 0 , "fake_int64", "-1", "fake int64 argument");
-            uparser_put( 0 , "vint64",   "-1,-1,-1", "vint64 argument");
-            uparser_put( 0 , "fake_vint64", "-1,-1,-1", "fake vint64 argument");
-            uparser_put('f', "float",    "-1", "float argument");
-            uparser_put( 0 , "fake_float",    "-1", "fake float argument");
-            uparser_put('d', "double",   "-1", "double argument");
-            uparser_put( 0 , "fake_double", "-1", "fake double argument");
-            uparser_put( 0 , "vfloat",   "-1,-1,-1", "vfloat argument");
-            uparser_put( 0 , "fake_vfloat", "-1,-1,-1", "fake vfloat argument");
-            uparser_put( 0 , "vdouble",  "-1,-1,-1", "vdouble argument");
-            uparser_put( 0 , "fake_vdouble", "-1,-1,-1", "fake vdouble arg");
-            uparser_parse();
+            uparser_opt('b', "boolean", "false", "boolean option");
+            uparser_opt( 0 , "fake_boolean", "false", "fake boolean option");
+            uparser_opt('i', "int32",     "-1", "integer option");
+            uparser_opt( 0 , "fake_int32", "-1", "integer option");
+            uparser_opt('c', "char",       "B", "char option");
+            uparser_opt( 0 , "fake_char",  "B", "char option");
+            uparser_opt('s', "string",   "bar", "string option");
+            uparser_opt( 0 , "fake_string",   "bar", "fake string option");
+            uparser_opt( 0 , "vchar", "X,X,X", "vchar option");
+            uparser_opt( 0 , "fake_vchar",    "X,X,X", "vchar option");
+            uparser_opt( 0 , "vint32", "-1,-1,-1", "vint32 option");
+            uparser_opt( 0 , "fake_vint32", "-1,-1,-1", "fake vint32 option");
+            uparser_opt('I', "int64", "-1", "int64 option");
+            uparser_opt( 0 , "fake_int64", "-1", "fake int64 option");
+            uparser_opt( 0 , "vint64",   "-1,-1,-1", "vint64 option");
+            uparser_opt( 0 , "fake_vint64", "-1,-1,-1", "fake vint64 option");
+            uparser_opt('f', "float",    "-1", "float option");
+            uparser_opt( 0 , "fake_float",    "-1", "fake float option");
+            uparser_opt('d', "double",   "-1", "double option");
+            uparser_opt( 0 , "fake_double", "-1", "fake double option");
+            uparser_opt( 0 , "vfloat",   "-1,-1,-1", "vfloat option");
+            uparser_opt( 0 , "fake_vfloat", "-1,-1,-1", "fake vfloat option");
+            uparser_opt( 0 , "vdouble",  "-1,-1,-1", "vdouble option");
+            uparser_opt( 0 , "fake_vdouble", "-1,-1,-1", "fake vdouble arg");
         }
         virtual void TearDown() { 
             int i;
@@ -93,16 +95,17 @@ namespace {
         }
     };
 
-    TEST_F(PutTest, add_argument) {
+    TEST_F(ArgTest, add_arguments) {
         int i;
-        ASSERT_DEATH(uparser_put('b', "other_boolean", "false", 
-                                 "other boolean argument"), ".*");
-        uparser_put('z', "zint32", "123", "other int argument");
-        uparser_get_int32("z", &i);
-        ASSERT_EQ(i, 123);
+        // ASSERT_DEATH(uparser_opt('b', "other_boolean", "false", 
+        //                          "other boolean option"), ".*");
+        uparser_arg("first_argument",  "first int argument");
+        uparser_arg("second_argument", "second int argument");
+        uparser_arg("third_argument",  "third int argument");
         uparser_parse();
-        uparser_get_int32("z", &i);
-        ASSERT_EQ(i, 123);
+        uparser_usage();
+        // uparser_get_int32("z", &i);
+        // ASSERT_EQ(i, 123);
     }
 
 }  // namespace

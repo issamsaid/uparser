@@ -47,7 +47,7 @@
 
 CPPGUARD_BEGIN();
 
-#ifdef  __UPARSER_DEBUG
+#ifdef  __DEBUG
 #define UPARSER_DEBUG(fmt,...)                                                 \
 {                                                                              \
     fprintf(stdout,                                                            \
@@ -55,9 +55,9 @@ CPPGUARD_BEGIN();
 }
 #else 
 #define UPARSER_DEBUG(fmt,...) 
-#endif  // __UPARSER_DEBUG
+#endif  // __DEBUG
 
-#ifdef __UPARSER_VERBOSE                             
+#ifdef __VERBOSE                             
 #define UPARSER_PRINT(fmt,...)                                                 \
 {                                                                              \
     fprintf(stdout,                                                            \
@@ -80,10 +80,17 @@ CPPGUARD_BEGIN();
 #define UPARSER_PRINT(fmt,...) 
 #define UPARSER_WARN(fmt,...) 
 #define UPARSER_WARN_IF(fmt,...) 
-#endif  // __UPARSER_VERBOSE 
+#endif  // __VERBOSE 
 
 __UPARSER_PRIVATE void
-__uparser_ptr_del(void *ptr) { free(ptr); }
+__uparser_ptr_del(void *ptr) { 
+    free(ptr); 
+}
+
+__UPARSER_PRIVATE int
+__uparser_int_cmp(void *c, void *d) {
+    return *(int*)c - *(int*)d;
+}
 
 __UPARSER_PRIVATE int
 __uparser_char_cmp(void *c, void *d) {
@@ -198,27 +205,46 @@ __uparser_value_isvalid(const char *value) {
     return (NULL != value) && (strlen(value) != 0);
 }
 
-__UPARSER_PRIVATE void 
-__uparser_arg_print(void *ptr) {
-    uparser_arg_t *arg = (uparser_arg_t *)ptr;
-    UPARSER_PRINT("--%-12s%s%s%c%s%-10s %s",
-                  arg->long_key,
-                  arg->short_key ? ", "           : " ",
-                  arg->short_key ? "-"            : " ",
-                  arg->short_key ? arg->short_key : ' ',
-                  arg->short_key ? " "            : "  ",
-                  arg->boolean   ? " "            : "= [value]",
-                  arg->help_message);
+__UPARSER_PRIVATE bool
+__uparser_opt_isboolean(__uparser_map_t *entry) {
+    return (((entry->flags) & __UPARSER_BOOL) == __UPARSER_BOOL);
 }
 
 __UPARSER_PRIVATE void 
-__uparser_arg_del(void *ptr) {
+__uparser_opt_print(void *ptr) {
+    __uparser_map_t *entry = (__uparser_map_t *)ptr;
+    if (((entry->flags) & __UPARSER_OPT) == __UPARSER_OPT) {
+        UPARSER_PRINT("\t--%-12s%s%s%c%s%-10s %s",
+                entry->long_key,
+                entry->short_key ? ", "              : " ",
+                entry->short_key ? "-"               : " ",
+                entry->short_key ? entry->short_key  : ' ',
+                entry->short_key ? " "               : "  ",
+                __uparser_opt_isboolean(entry) ? " " : "= [value]",
+                entry->help_message);
+    }
+}
+
+__UPARSER_PRIVATE bool
+__uparser_arg_isvalid(const char *value) {
+    return (NULL != value) && (strlen(value) != 0);
+}
+
+__UPARSER_PRIVATE void 
+__uparser_arg_print(void *ptr) {
+    __uparser_map_t *entry = (__uparser_map_t *)ptr;
+    UPARSER_PRINT("\t%-20s %s",
+                  entry->long_key, entry->help_message);
+}
+
+__UPARSER_PRIVATE void 
+__uparser_map_del(void *ptr) {
     if (ptr) {
-        uparser_arg_t *arg = (uparser_arg_t *)ptr;
-        free(arg->long_key);
-        free(arg->value);
-        free(arg->help_message);
-        arg = NULL;
+        __uparser_map_t *entry = (__uparser_map_t *)ptr;
+        free(entry->long_key);
+        free(entry->value);
+        free(entry->help_message);
+        free(entry); entry = NULL;
     }
 }
 

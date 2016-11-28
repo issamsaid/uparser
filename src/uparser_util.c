@@ -34,7 +34,7 @@
 #include <__uparser/util-inl.h>
 #include <__uparser/types-inl.h>
 
-extern uparser_t *up;
+extern __uparser_t *up;
 
 bool uparser_has(const char *key) {
     UPARSER_EXIT_IF((key == NULL) || (strlen(key) == 0), "key cannot be empty");

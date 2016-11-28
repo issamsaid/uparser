@@ -44,18 +44,18 @@ set (CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}")
 set (CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 
 ## Configurable options for how we want to build uparser
-option(uparser_debug       
-    "Build uparser with the debug mode."                  OFF)
-option(uparser_verbose     
-    "Build uparser with the verbose mode activated."       ON)
+option(debug       
+    "Build uparser with the debug mode."            OFF)
+option(verbose     
+    "Build uparser with the verbose mode activated." ON)
 
 ## Set the build type (DEFAULT is Release)
 if (NOT CMAKE_BUILD_TYPE)
    set (CMAKE_BUILD_TYPE Release)
 endif (NOT CMAKE_BUILD_TYPE)
-if (uparser_debug)
+if (debug)
 	 set (CMAKE_BUILD_TYPE Debug)
-endif (uparser_debug)
+endif (debug)
 message(STATUS "... CMAKE_BUILD_TYPE : ${CMAKE_BUILD_TYPE}")
 
 ## Set the compilation flags 
@@ -95,10 +95,10 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" MATCHES "MSVC")
   	include(${CMAKE_MODULE_PATH}/msvc_cxx.cmake)
 endif ("${CMAKE_CXX_COMPILER_ID}"     MATCHES "Cray")
 
-if (uparser_verbose)
-	set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   -D__UPARSER_VERBOSE")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D__UPARSER_VERBOSE")
-endif (uparser_verbose)
+if (verbose)
+	  set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   -D__VERBOSE")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D__VERBOSE")
+endif (verbose)
 
 ##
 ## Use the urb_tree library if the user sets its path 

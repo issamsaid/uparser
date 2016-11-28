@@ -47,28 +47,37 @@ typedef void (*int64_getter_t)  (const char*, int64_t*);
 typedef void (*float_getter_t)  (const char*, float*);
 typedef void (*double_getter_t) (const char*, double*);
 
-typedef struct __uparser_arg_t {
+#define __UPARSER_ARG  0x10000000
+#define __UPARSER_OPT  0x01000000
+#define __UPARSER_BOOL 0x01000001
+
+typedef unsigned int __uparser_flags_t;
+
+typedef struct __uparser_map_struct {
     char short_key;
     char *long_key;
     char *help_message;
     char *value;
-    bool boolean;
-} uparser_arg_t;
+    __uparser_flags_t flags;
+} __uparser_map_t;
 
-typedef struct __uparser_t {
-    char  *exe_name;
-    int argc;
-    char **argv;
+typedef struct __uparser_struct {
+    char      *exe_name;
+    int            argc;
+    int         nb_opts; 
+    int         nb_args; 
+    char         **argv;
     urb_t *short_lookup;
-    urb_t *long_lookup;
-    bool_getter_t   get_bool;
-    int32_getter_t  get_int32;
-    int64_getter_t  get_int64;
-    char_getter_t   get_char;
+    urb_t  *long_lookup;
+    urb_t   *args_index;
+    bool_getter_t     get_bool;
+    int32_getter_t   get_int32;
+    int64_getter_t   get_int64;
+    char_getter_t     get_char;
     string_getter_t get_string;
-    float_getter_t  get_float;
+    float_getter_t   get_float;
     double_getter_t get_double;
-} uparser_t;
+} __uparser_t;
 
 CPPGUARD_END();
 

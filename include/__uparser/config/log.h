@@ -33,37 +33,28 @@
 /// @brief Configuration file for logging in uparser.
 ///
 
-///
-/// @brief Use tty as the output for logging, otherwise use files.
-///
-#ifdef __UPARSER_LOG_STD
-#endif // __UPARSER_LOG_STD
 
 ///
 /// @brief Set the verbose mode of uparser up.
 ///
-#ifdef __UPARSER_VERBOSE
-#endif // __UPARSER_VERBOSE          
+#ifdef __VERBOSE
+#endif // __VERBOSE          
 
 ///
 /// @brief Set the debug mode of uparser up.
 ///
-#ifdef __UPARSER_DEBUG
+#ifdef __DEBUG
 
-#ifndef __UPARSER_VERBOSE
-#define __UPARSER_VERBOSE
-#endif // __UPARSER_VERBOSE         
+#ifndef __VERBOSE
+#define __VERBOSE
+#endif // __VERBOSE         
 
-#ifndef __UPARSER_LOG_STD
-#define __UPARSER_LOG_STD
-#endif // __UPARSER_LOG_STD 
-
-#endif // __UPARSER_DEBUG           
+#endif // __DEBUG           
 
 ///
-/// @brief Terminal colors (only available if out/err to tty).
+/// @brief Terminal colors.
 ///
-#ifdef __UPARSER_LOG_STD
+#ifdef __VERBOSE
 #define UPARSER_GREEN  "\x1B[32m"
 #define UPARSER_PURPLE "\x1B[35m"
 #define UPARSER_YELLOW "\x1B[33m"
@@ -75,6 +66,6 @@
 #define UPARSER_YELLOW ""
 #define UPARSER_RED    ""
 #define UPARSER_END    ""
-#endif  // __UPARSER_LOG_STD
+#endif  // __VERBOSE
 
 #endif  // __UPARSER_CONFIG_LOG_H_

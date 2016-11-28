@@ -52,17 +52,17 @@ program simple_parser_fortran
     call uparser_init()
 
     !!< Populate the parser.
-    call uparser_put('i', "int32",   "2",        "this is a 32 bits integer")
-    call uparser_put('I', "int64",   "-9",       "this is a 64 bits integer")
-    call uparser_put('b', "boolean", "false",    "this is a boolean")
-    call uparser_put('s', "string",  "foo",      "this is a string")
-    call uparser_put('f', "float",   "1.234",    "this is a float")
-    call uparser_put('d', "double",  "9.876543", "this is a double")
+    call uparser_opt('i', "int32",   "2",        "this is a 32 bits integer")
+    call uparser_opt('I', "int64",   "-9",       "this is a 64 bits integer")
+    call uparser_opt('b', "boolean", "false",    "this is a boolean")
+    call uparser_opt('s', "string",  "foo",      "this is a string")
+    call uparser_opt('f', "float",   "1.234",    "this is a float")
+    call uparser_opt('d', "double",  "9.876543", "this is a double")
     
-    call uparser_put("vint32",  "1,2,3", "this is a 32 bits integer tab")
-    call uparser_put("vint64",  "7,8,9", "this is a 64 bits integer tab")
-    call uparser_put("vfloat",  "1.23,4.56,7.89",  "this is a float tab")
-    call uparser_put("vdouble", "7.65,8.76,9.87", "this is a double tab")
+    call uparser_opt("vint32",  "1,2,3", "this is a 32 bits integer tab")
+    call uparser_opt("vint64",  "7,8,9", "this is a 64 bits integer tab")
+    call uparser_opt("vfloat",  "1.23,4.56,7.89",  "this is a float tab")
+    call uparser_opt("vdouble", "7.65,8.76,9.87", "this is a double tab")
 
     !!< Parse the command line arguments.
     call uparser_parse()

@@ -55,17 +55,17 @@ int main(int argc, char **argv) {
     uparser_init(argc, argv);
 
     ///< Populate the parser.
-    uparser_put('i', "int32",   "2",     "this is a 32 bits integer");
-    uparser_put('I', "int64",   "-9",    "this is a 64 bits integer");
-    uparser_put('b', "boolean", "false", "this is a boolean");
-    uparser_put('s', "string",  "foo",   "this is a string");
-    uparser_put('f', "float",   "1.33",  "this is a float");
-    uparser_put('d', "double",  "9.77",  "this is a double");
+    uparser_opt('i', "int32",   "2",     "this is a 32 bits integer");
+    uparser_opt('I', "int64",   "-9",    "this is a 64 bits integer");
+    uparser_opt('b', "boolean", "false", "this is a boolean");
+    uparser_opt('s', "string",  "foo",   "this is a string");
+    uparser_opt('f', "float",   "1.33",  "this is a float");
+    uparser_opt('d', "double",  "9.77",  "this is a double");
 
-    uparser_put(0, "vint32",           "1,2,3", "this is a 32bits integer tab");
-    uparser_put(0, "vint64",           "4,5,6", "this is a 64bits integer tab");
-    uparser_put(0, "vfloat",  "1.22,2,33,4,55", "this is a float tab");
-    uparser_put(0, "vdouble", "9.77,8,66,7,66", "this is a double tab");
+    uparser_opt(0, "vint32",           "1,2,3", "this is a 32bits integer tab");
+    uparser_opt(0, "vint64",           "4,5,6", "this is a 64bits integer tab");
+    uparser_opt(0, "vfloat",  "1.22,2,33,4,55", "this is a float tab");
+    uparser_opt(0, "vdouble", "9.77,8,66,7,66", "this is a double tab");
 
     ///< Parse the command line arguments.
     uparser_parse();

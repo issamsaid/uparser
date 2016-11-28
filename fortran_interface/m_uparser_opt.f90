@@ -26,12 +26,12 @@
 !! NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 !! SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 !!
-!! @file m_uparser_get.f90
+!! @file fortran_interface/m_uparser_opt.f90
 !! @author Issam SAID
-!! @brief This file implements the Fortran interface of the uparser put routine.  
-!! @see uparser/put.h
+!! @brief This file implements the Fortran interface of the uparser_opt routine.  
+!! @see uparser/opt.h
 !<
-module m_uparser_put
+module m_uparser_opt
     use, intrinsic :: iso_c_binding
 
     implicit none
@@ -39,27 +39,27 @@ module m_uparser_put
     private
 
     interface
-        subroutine c_uparser_put(short_key, long_key,         &
+        subroutine c_uparser_opt(short_key, long_key,         &
                                  default_value, help_message) &
-                                 bind(c, name = "uparser_put")
+                                 bind(c, name = "uparser_opt")
             use, intrinsic :: iso_c_binding, only: c_char
             implicit none
             character(kind=c_char, len=1), value, intent(in) :: short_key
             character(kind=c_char),               intent(in) :: long_key
             character(kind=c_char),               intent(in) :: default_value
             character(kind=c_char),               intent(in) :: help_message
-        end subroutine c_uparser_put
+        end subroutine c_uparser_opt
     end interface
 
-    public :: uparser_put
-    interface uparser_put
-        module procedure uparser_put_with_short_key
-        module procedure uparser_put_no_short_key
-    end interface uparser_put
+    public :: uparser_opt
+    interface uparser_opt
+        module procedure uparser_opt_with_short_key
+        module procedure uparser_opt_no_short_key
+    end interface uparser_opt
 
 contains
     
-    subroutine uparser_put_with_short_key(short_key, long_key, &
+    subroutine uparser_opt_with_short_key(short_key, long_key, &
                                           default_value, help_message)
         character(len=1),  intent(in) :: short_key
         character(len=*),  intent(in) :: long_key
@@ -68,21 +68,21 @@ contains
 
         character(len=1, kind=c_char) :: c 
         c = short_key
-        call c_uparser_put(c,                                &
+        call c_uparser_opt(c,                                &
                            trim(long_key)//c_null_char,      &
                            trim(default_value)//c_null_char, &
                            trim(help_message)//c_null_char)
-    end subroutine uparser_put_with_short_key
+    end subroutine uparser_opt_with_short_key
 
-    subroutine uparser_put_no_short_key(long_key, default_value, help_message)
+    subroutine uparser_opt_no_short_key(long_key, default_value, help_message)
         character(len=*),  intent(in) :: long_key
         character(len=*),  intent(in) :: default_value
         character(len=*),  intent(in) :: help_message
         
-        call c_uparser_put(c_null_char,                      &
+        call c_uparser_opt(c_null_char,                      &
                            trim(long_key)//c_null_char,      &
                            trim(default_value)//c_null_char, &
                            trim(help_message)//c_null_char)
-    end subroutine uparser_put_no_short_key
+    end subroutine uparser_opt_no_short_key
         
-end module m_uparser_put
+end module m_uparser_opt

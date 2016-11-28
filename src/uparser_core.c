@@ -32,8 +32,6 @@
 ///        initialization, help and the finalization.
 ///
 #include <uparser/core.h>
-#include <uparser/get.h>
-#include <uparser/put.h>
 #include <uparser/single/get.h>
 #include <__uparser/types-inl.h>
 #include <__uparser/util-inl.h>
@@ -43,15 +41,18 @@
 ///
 /// @brief A static uparser object that will be used internally.
 ///
-uparser_t *up = NULL;
+__uparser_t *up = NULL;
 
 void uparser_init(int argc, char** argv) {
     if (up == NULL) {
-        up               = (uparser_t *)malloc(sizeof(uparser_t));
+        up               = (__uparser_t *)malloc(sizeof(__uparser_t));
         up->exe_name     = (char *)malloc(sizeof(char)*strlen(argv[0]));
         up->short_lookup = &urb_sentinel;
         up->long_lookup  = &urb_sentinel;
+        up->args_index   = &urb_sentinel;
         up->argc         = argc;
+        up->nb_args      = 0;
+        up->nb_opts      = 0;
         up->argv         = argv;
         sprintf(up->exe_name, "%s", argv[0]);
 
@@ -69,7 +70,7 @@ void uparser_init(int argc, char** argv) {
 void uparser_parse() {
     char tmp[__UPARSER_STR_SIZE];
     char *key, *value, **saved_value;
-    urb_t *n; int i, j; uparser_arg_t *arg;
+    urb_t *n; int i, j, passed_args = 0; __uparser_map_t *entry;
     if (up != NULL) {
         for (i=1; i < up->argc; i++) {
             sprintf(tmp, "%s", up->argv[i]);
@@ -81,14 +82,16 @@ void uparser_parse() {
                     for (j=1; j<strlen(key); j++) { 
                         if (key[j] == 'h') {
                             uparser_usage();
+                            uparser_release();
+                            exit(EXIT_SUCCESS);
                         } else {
                             UPARSER_EXIT_IF((n=urb_tree_find(&up->short_lookup, 
                                         (void*)&key[j], 
                                          __uparser_char_cmp)) == &urb_sentinel, 
                                          "key '%c' is not recognized", key[j]);
-                            arg         = (uparser_arg_t*)n->value;
-                            saved_value = &arg->value;
-                            UPARSER_EXIT_IF(!arg->boolean,
+                            entry       = (__uparser_map_t*)n->value;
+                            saved_value = &entry->value;
+                            UPARSER_EXIT_IF(!__uparser_opt_isboolean(entry),
                                 "invalid boolean argument, found non boolean"
                                 "'%c' with no assigned value", key[1]);
                             if (strlen("true") > strlen(*saved_value)) {
@@ -109,9 +112,9 @@ void uparser_parse() {
                                     "key '%c' is not recognized", key[1]);
                     UPARSER_EXIT_IF(!__uparser_value_isvalid(value),
                                     "argument value '%s' is not valid", value);
-                    arg         = (uparser_arg_t*)n->value;
-                    saved_value = &arg->value;
-                    UPARSER_EXIT_IF(arg->boolean,
+                    entry       = (__uparser_map_t*)n->value;
+                    saved_value = &entry->value;
+                    UPARSER_EXIT_IF(__uparser_opt_isboolean(entry),
                                     "boolean arguments don't take values, "
                                     "found boolean '%c=%s'", key[1], value);
                     if (strlen(value) > strlen(*saved_value)) {
@@ -127,14 +130,16 @@ void uparser_parse() {
                     /// the value equal to true internally (false otherwise).
                     if (strcmp(&key[2], "help") == 0) {
                         uparser_usage();
+                        uparser_release();
+                        exit(EXIT_SUCCESS);
                     } else {
                         UPARSER_EXIT_IF((n=urb_tree_find(&up->long_lookup, 
                                         (void*)&key[2],
                                          __uparser_str_cmp)) == &urb_sentinel,
                                         "key '%s' is not recognized", key);
-                        arg         = (uparser_arg_t*)n->value;
-                        saved_value = &arg->value;
-                        UPARSER_EXIT_IF(!arg->boolean,
+                        entry       = (__uparser_map_t*)n->value;
+                        saved_value = &entry->value;
+                        UPARSER_EXIT_IF(!__uparser_opt_isboolean(entry),
                                 "invalid boolean argument, found non boolean"
                                 "'%s' with no assigned value", &key[2]);
                         if (strlen("true") > strlen(*saved_value)) {
@@ -155,9 +160,9 @@ void uparser_parse() {
                                         (void*)&key[2],
                                          __uparser_str_cmp)) == &urb_sentinel,
                                         "key '%s' is not recognized", key);
-                        arg         = (uparser_arg_t*)n->value;
-                        saved_value = &arg->value;
-                        UPARSER_EXIT_IF(arg->boolean,
+                        entry       = (__uparser_map_t*)n->value;
+                        saved_value = &entry->value;
+                        UPARSER_EXIT_IF(__uparser_opt_isboolean(entry),
                                     "boolean arguments don't take values, "
                                     "found boolean '%s=%s'", 
                                     &key[2], value);
@@ -169,8 +174,23 @@ void uparser_parse() {
                         sprintf(*saved_value, "%s", value);
                     }
                 }
-            } else UPARSER_EXIT("invalid key '%s'", key);            
-        }    
+            } else if (__uparser_arg_isvalid(up->argv[i])) {
+                UPARSER_EXIT_IF((n=urb_tree_find(&up->args_index, 
+                                (void*)&passed_args,
+                                __uparser_str_cmp)) == &urb_sentinel,
+                                "argument '%s' is not recognized", up->argv[i]);
+                entry        = (__uparser_map_t*)n->value;
+                entry->value = (char*)malloc(sizeof(char)*strlen(up->argv[i]));
+                sprintf(entry->value, "%s", up->argv[i]);
+                passed_args++;
+            } else { UPARSER_EXIT("invalid option or argument '%s'", key); }
+        }
+        if (up->nb_args != passed_args) {
+            uparser_usage();
+            uparser_release();
+            UPARSER_EXIT("invalid number of arguments passed (%d/%d)",
+                passed_args, up->nb_args);
+        }
     }
 }
 
@@ -220,7 +240,7 @@ void uparser_load(const char *filename) {
                 s = strtok_r(NULL, "=", &save_param);
                 UPARSER_EXIT_IF(!__uparser_value_isvalid(s),
                                 "argument value '%s' is not valid", s);
-                saved_value = &((uparser_arg_t*)n->value)->value;
+                saved_value = &((__uparser_map_t*)n->value)->value;
                 if (strlen(s) > strlen(*saved_value)) {
                     free(*saved_value);
                     *saved_value = (char*)malloc(sizeof(char)*strlen(s));
@@ -249,7 +269,7 @@ void uparser_load(const char *filename) {
                     s = strtok_r(NULL, "=", &save_param);
                     UPARSER_EXIT_IF(!__uparser_value_isvalid(s), 
                                     "argument value '%s' is not valid", s);
-                    saved_value = &((uparser_arg_t*)n->value)->value;
+                    saved_value = &((__uparser_map_t*)n->value)->value;
                     if (strlen(s) > strlen(*saved_value)) {
                         free(*saved_value);
                         *saved_value = (char*)malloc(sizeof(char)*strlen(s));
@@ -265,22 +285,43 @@ void uparser_load(const char *filename) {
 void uparser_usage() {
     if (up != NULL) {
         UPARSER_PRINT("");
-        UPARSER_PRINT("USAGE  : %s [options]", up->exe_name);
+        if (up->nb_opts) {
+            if (up->nb_args) {
+                UPARSER_PRINT("USAGE  : %s [options] [arguments]", up->exe_name);
+            } else {
+                UPARSER_PRINT("USAGE  : %s [options]", up->exe_name);
+            }
+        } else {
+            if (up->nb_args) {
+                UPARSER_PRINT("USAGE  : %s [arguments]", up->exe_name);
+            } else {
+                UPARSER_PRINT("USAGE  : %s", up->exe_name);
+            }
+        }
         UPARSER_PRINT("");
-        UPARSER_PRINT("OPTIONS:");
-        UPARSER_PRINT("--%-12s%s%-10s %s",
-                      "help", ", -h ", " ", "show this help message");
-        UPARSER_PRINT("--%-12s%-10s %s",
-                      __UPARSER_FILE_KEYWORD, 
-                      "     = [value] ", "load parameters from file");
-        urb_tree_walk(&up->long_lookup, NULL, __uparser_arg_print);
+        if (up->nb_opts) {
+            UPARSER_PRINT("OPTIONS:");
+            UPARSER_PRINT("\t--%-12s%s%-10s %s",
+                          "help", ", -h ", " ", "show this help message");
+            UPARSER_PRINT("\t--%-12s%-10s %s",
+                          __UPARSER_FILE_KEYWORD, 
+                          "     = [value] ", "load parameters from file");
+            urb_tree_walk(&up->long_lookup, NULL, __uparser_opt_print);
+        }
+        if (up->nb_args) {
+            UPARSER_PRINT("");
+            UPARSER_PRINT("ARGUMENTS:");
+            urb_tree_walk(&up->args_index, NULL, __uparser_arg_print);
+        }
         UPARSER_PRINT("");
     }
 }
 
 void uparser_release() {
     if (up != NULL) {
-        urb_tree_delete(&up->long_lookup, NULL, __uparser_arg_del);
+        urb_tree_delete( &up->long_lookup, NULL, __uparser_map_del);
+        urb_tree_delete(&up->short_lookup, NULL, NULL);
+        urb_tree_delete(&up->args_index, __uparser_ptr_del, NULL);
         free(up->exe_name); free(up); up = NULL;
     }
 }

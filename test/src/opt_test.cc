@@ -1,4 +1,4 @@
-///
+    ///
 /// @copyright Copyright (c)2016-, Issam SAID <said.issam@gmail.com>
 /// All rights reserved.
 ///
@@ -26,16 +26,16 @@
 /// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 /// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ///
-/// @file test/src/get_test.cc
+/// @file test/src/opt_test.cc
 /// @author Issam SAID
-/// @brief Unit testing file for the uparser get routine.
+/// @brief Unit testing file for the uparser_opt routine.
 /// 
 #include <gtest/gtest.h>
 #include <uparser/uparser.h>
 
 namespace {
 
-    class GetTest : public ::testing::Test {
+    class OptTest : public ::testing::Test {
     protected:
         int    argc;
         char **argv; 
@@ -93,116 +93,16 @@ namespace {
         }
     };
 
-    TEST_F(GetTest, boolean_value) {
-        bool b;
-        uparser_get_bool("boolean", &b);
-        ASSERT_EQ(b, true);
-        uparser_get_bool("b", &b);
-        ASSERT_EQ(b, true);
-        uparser_get_bool("fake_boolean", &b);
-        ASSERT_EQ(b, false);
+    TEST_F(OptTest, add_option) {
+        int i;
+        ASSERT_DEATH(uparser_opt('b', "other_boolean", "false", 
+                                 "other boolean argument"), ".*");
+        uparser_opt('z', "zint32", "123", "other int argument");
+        uparser_get_int32("z", &i);
+        ASSERT_EQ(i, 123);
+        uparser_parse();
+        uparser_get_int32("z", &i);
+        ASSERT_EQ(i, 123);
     }
 
-    TEST_F(GetTest, char_value) {
-        char b, vb[3];
-        uparser_get_char("char", &b);
-        ASSERT_EQ(b, 'V');
-        uparser_get_char("c", &b);
-        ASSERT_EQ(b, 'V');
-        uparser_get_char("fake_char", &b);
-        ASSERT_EQ(b, 'B');
-
-        uparser_get_char("vchar", vb);
-        ASSERT_EQ(vb[0], 'A');
-        ASSERT_EQ(vb[1], 'B');
-        ASSERT_EQ(vb[2], 'C');
-        uparser_get_char("fake_vchar", vb);
-        ASSERT_EQ(vb[0], 'X');
-        ASSERT_EQ(vb[1], 'X');
-        ASSERT_EQ(vb[2], 'X');
-    }
-
-    TEST_F(GetTest, string_value) {
-        char b[32];
-        uparser_get_string("string", b);
-        ASSERT_STREQ(b, "foo");
-        uparser_get_string("s", b);
-        ASSERT_STREQ(b, "foo");
-        uparser_get_string("fake_string", b);
-        ASSERT_STREQ(b, "bar");
-    }
-
-    TEST_F(GetTest, int32_value) {
-        int b, vb[3];
-        uparser_get_int32("int32", &b);
-        ASSERT_EQ(b, 1);
-        uparser_get_int32("i", &b);
-        ASSERT_EQ(b, 1);
-        uparser_get_int32("fake_int32", &b);
-        ASSERT_EQ(b, -1);
-
-        uparser_get_int32("vint32", vb);
-        ASSERT_EQ(vb[0], 1);
-        ASSERT_EQ(vb[1], 2);
-        ASSERT_EQ(vb[2], 3);
-        uparser_get_int32("fake_vint32", vb);
-        ASSERT_EQ(vb[0], -1);
-        ASSERT_EQ(vb[1], -1);
-        ASSERT_EQ(vb[2], -1);
-    }
-
-    TEST_F(GetTest, int64_value) {
-        int64_t b, vb[3];
-        uparser_get_int64("int64", &b);
-        ASSERT_EQ(b, 9);
-        uparser_get_int64("fake_int64", &b);
-        ASSERT_EQ(b, -1);
-
-        uparser_get_int64("vint64", vb);
-        ASSERT_EQ(vb[0], 9);
-        ASSERT_EQ(vb[1], 10);
-        ASSERT_EQ(vb[2], 11);
-        uparser_get_int64("fake_vint64", vb);
-        ASSERT_EQ(vb[0], -1);
-        ASSERT_EQ(vb[1], -1);
-        ASSERT_EQ(vb[2], -1);
-    }
-    
-    TEST_F(GetTest, float_value) {
-        float b, vb[3];
-        uparser_get_float("float", &b);
-        ASSERT_NEAR(b, 1.34, 0.001);
-        uparser_get_float("f", &b);
-        ASSERT_NEAR(b, 1.34, 0.001);
-        uparser_get_float("fake_float", &b);
-        ASSERT_NEAR(b, -1, 0.001);
-
-        uparser_get_float("vfloat", vb);
-        ASSERT_NEAR(vb[0], 1.34, 0.001);
-        ASSERT_NEAR(vb[1], 2.52, 0.001);
-        ASSERT_NEAR(vb[2], 3.14, 0.001);
-        uparser_get_float("fake_vfloat", vb);
-        ASSERT_NEAR(vb[0], -1, 0.001);
-        ASSERT_NEAR(vb[1], -1, 0.001);
-        ASSERT_NEAR(vb[2], -1, 0.001);
-    }
-
-    TEST_F(GetTest, double_value) {
-        double b, vb[3];
-        uparser_get_double("double", &b);
-        ASSERT_NEAR(b, 1.34, 0.001);
-        uparser_get_double("d", &b);
-        ASSERT_NEAR(b, 1.34, 0.001);
-        uparser_get_double("fake_double", &b);
-        ASSERT_NEAR(b, -1, 0.001);
-
-        uparser_get_double("vdouble", vb);
-        ASSERT_NEAR(vb[0], 1.34, 0.001);
-        ASSERT_NEAR(vb[1], 2.52, 0.001);
-        ASSERT_NEAR(vb[2], 3.14, 0.001);
-        uparser_get_double("fake_vdouble", vb);
-        ASSERT_NEAR(vb[0], -1, 0.001);
-        ASSERT_NEAR(vb[1], -1, 0.001);
-        ASSERT_NEAR(vb[2], -1, 0.001);
-    }
 }  // namespace
