@@ -187,7 +187,6 @@ void uparser_parse() {
         }
         if (up->nb_args != passed_args) {
             uparser_usage();
-            uparser_release();
             UPARSER_EXIT("invalid number of arguments passed (%d/%d)",
                 passed_args, up->nb_args);
         }
